@@ -25,6 +25,27 @@ app.post("/api/notes",(req,res)=>{
     fs.writeFileSync("./db/db.json",JSON.stringify(db))
     res.json(note)
 })
+
+app.delete("/api/notes/:id",(req,res)=>{
+    try {
+
+        let notesdata = fs.readFileSync("./db/db.json","utf-8")
+    let databasedata = JSON.parse(notesdata)
+    const notesarray = databasedata.filter((notetodelete)=>{
+        return notetodelete.id !== req.params.id
+
+    })
+    fs.writeFileSync("./db/db.json",JSON.stringify(notesarray))
+    res.json("notedelete")
+    
+    } catch (err) {
+    console.error(err)
+    res.status(500).json(err)
+        
+    }
+    
+})
+
 app.get("/notes",(req,res)=>{
     res.sendFile(path.join(__dirname,"/public/notes.html"))
 })
